@@ -2,16 +2,21 @@ require 'open-uri'
 require 'net/https'
 require 'fileutils'
 require 'yaml'
-# def update_assets(group,assets)
-#   
-# end
+require 'pathname'
+
+$ASSETS_ROOT = nil
+$ASSETS_ROOT = $ROOT if defined? $ROOT
+$ASSETS_ROOT = Rails.root if defined? Rails
+$ASSETS_ROOT ||= Pathname(Dir.pwd)
+
+
 namespace :assets do
 
 
   desc "Update bootstrap framework from github master"
   task :update do  
 
-    assets = YAML::load File.open($ROOT.join("config/assets.yml"))
+    assets = YAML::load File.open($ASSETS_ROOT.join("config/assets.yml"))
 
     assets.each do |vendor,manifest|
       process_assets_manifest vendor,manifest
@@ -20,10 +25,10 @@ namespace :assets do
   end
   
   def process_assets_manifest vendor, manifest
-    vendor_root = $ROOT.join("vendor",vendor)
+    vendor_root = $ASSETS_ROOT.join("vendor",vendor)
 
     manifest.each do |category,files|
-      download_root = $ROOT.join("vendor",category,vendor)
+      download_root = $ASSETS_ROOT.join("vendor",category,vendor)
       FileUtils.mkdir_p download_root
       download_files download_root, files, category
     end
@@ -43,7 +48,7 @@ namespace :assets do
   end
   
   def relative_path(local_path,append="/")
-    local_path.to_s.gsub("#{$ROOT.to_s}#{append}", "")
+    local_path.to_s.gsub("#{$ASSETS_ROOT.to_s}#{append}", "")
   end
 
 end
