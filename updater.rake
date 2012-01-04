@@ -27,8 +27,13 @@ namespace :assets do
   def process_assets_manifest vendor, manifest
     vendor_root = $ASSETS_ROOT.join("vendor",vendor)
 
-    manifest.each do |category,files|
-      download_root = $ASSETS_ROOT.join("vendor",category,vendor)
+    manifest.each do |category,files|      
+      if defined? Rails
+        download_root = $ASSETS_ROOT.join("vendor/assets",category,vendor)
+      else
+        download_root = $ASSETS_ROOT.join("vendor",category,vendor)
+      end
+      
       FileUtils.mkdir_p download_root
       download_files download_root, files, category
     end
