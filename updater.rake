@@ -45,7 +45,11 @@ namespace :assets do
       local_path = directory.join(name)
       print "Downloading #{remote_url} -> #{relative_path(local_path)} ... "
       open(remote_url) do |content|
-        File.open("#{local_path}.update","w") { |f| f << content.read }
+        content.binmode
+        File.open("#{local_path}.update","w") do |f| 
+          f.binmode
+          f << content.read
+        end
         FileUtils.mv "#{local_path}.update", local_path
       end
       puts "done"
