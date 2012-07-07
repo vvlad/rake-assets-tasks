@@ -1,5 +1,5 @@
 ## Assets
-  
+
   Refreshes the asset files from vendor/{javascripts, stylesheets}
   config file is located at config/assets.yml
 

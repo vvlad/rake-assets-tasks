@@ -14,7 +14,7 @@ namespace :assets do
 
 
   desc "Update bootstrap framework from github master"
-  task :update do  
+  task :update do
 
     assets = YAML::load File.open($ASSETS_ROOT.join("config/assets.yml"))
 
@@ -23,17 +23,17 @@ namespace :assets do
     end
 
   end
-  
-  def process_assets_manifest vendor, manifest
+
+  def process_assets_manifest(vendor, manifest)
     vendor_root = $ASSETS_ROOT.join("vendor",vendor)
 
-    manifest.each do |category,files|      
+    manifest.each do |category,files|
       if defined? Rails
         download_root = $ASSETS_ROOT.join("vendor/assets",category,vendor)
       else
         download_root = $ASSETS_ROOT.join("vendor",category,vendor)
       end
-      
+
       FileUtils.mkdir_p download_root
       download_files download_root, files, category
     end
@@ -46,7 +46,7 @@ namespace :assets do
       print "Downloading #{remote_url} -> #{relative_path(local_path)} ... "
       open(remote_url) do |content|
         content.binmode
-        File.open("#{local_path}.update","w") do |f| 
+        File.open("#{local_path}.update","w") do |f|
           f.binmode
           f << content.read
         end
@@ -55,7 +55,7 @@ namespace :assets do
       puts "done"
     end
   end
-  
+
   def relative_path(local_path,append="/")
     local_path.to_s.gsub("#{$ASSETS_ROOT.to_s}#{append}", "")
   end
